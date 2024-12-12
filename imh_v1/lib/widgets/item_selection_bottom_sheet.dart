@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pages/add_object_details_page.dart';
 
 class ItemSelectionBottomSheet extends StatelessWidget {
   final List<String> items = ['아이템 1', '아이템 2', '아이템 3'];
@@ -50,6 +51,21 @@ class ItemSelectionBottomSheet extends StatelessWidget {
               },
             ),
           ),
+          SizedBox(height: 16), // 버튼과 리스트 간의 간격
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddObjectDetailsPage(object: items[0]),
+                  ),
+                );
+              },
+              child: Text('새 아이템 추가'),
+            )
+          )
         ],
       ),
     );
@@ -66,7 +82,22 @@ class AddItemDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('$item 세부 정보')),
-      body: Center(child: Text('$item의 정보를 추가하세요.')),
+      body: Center(child: Text('$item 정보를 추가하세요.')),
     );
   }
 }
+
+// Object 추가 페이지
+// class AddObjectDetailsPage extends StatelessWidget {
+//   final String object;
+
+//   AddObjectDetailsPage({required this.object});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('$object 세부 정보')),
+//       body: Center(child: Text('$object 정보를 추가하세요.')),
+//     );
+//   }
+// }
