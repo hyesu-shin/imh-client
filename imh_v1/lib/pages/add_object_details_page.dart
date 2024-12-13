@@ -4,18 +4,76 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/object_bloc/object_bloc.dart';
 import '../blocs/object_bloc/object_event.dart';
-import '../blocs/object_bloc/object_state.dart';
+import '../models/object_model.dart';
 
-class AddObjectDetailsPage extends StatelessWidget {
-  final String object;
+class AddObjectDetailsPage extends StatefulWidget {
+  @override
+  _AddObjectDetailsPageState createState() => _AddObjectDetailsPageState();
+}
 
-  AddObjectDetailsPage({required this.object});
+class _AddObjectDetailsPageState extends State<AddObjectDetailsPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _startDateController = TextEditingController();
+
+  // Dynamic key-value pair list
+  List<Map<String, String>> _dynamicFields = [];
+
+  String? _selectedOption; // Dropdown value
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    _startDateController.dispose();
+    super.dispose();
+  }
+
+  void _addDynamicField() {
+    setState(() {
+      _dynamicFields.add({"key": "", "value": ""});
+    });
+  }
+
+  void _removeDynamicField(int index) {
+    setState(() {
+      _dynamicFields.removeAt(index);
+    });
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      // Build the object data
+      final newObject = ObjectModel(
+        name: _nameController.text,
+        description: _descriptionController.text,
+        startDate: _startDateController.text,
+        option: _selectedOption,
+        dynamicFields: _dynamicFields,
+      );
+
+      // Dispatch the event to add the object
+      context.read<ObjectBloc>().add(AddObjectEvent(newObject));
+
+      // Clear the form after submission
+      _nameController.clear();
+      _descriptionController.clear();
+      _startDateController.clear();
+      _dynamicFields.clear();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Object added successfully!')),
+      );
+
+      Navigator.of(context).pop();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Form key for validation
-    final _formKey = GlobalKey<FormState>();
-
     return Scaffold(
       appBar: AppBar(
         title: Text('오브젝트 생성'),
@@ -24,9 +82,9 @@ class AddObjectDetailsPage extends StatelessWidget {
             icon: Icon(Icons.close),
             onPressed: () {
               Navigator.of(context).pop();
-            }
-          )
-        ]
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -34,7 +92,7 @@ class AddObjectDetailsPage extends StatelessWidget {
           key: _formKey,
           child: ListView(
             children: [
-              // Image placeholder with upload button
+              // Image placeholder
               GestureDetector(
                 onTap: () {
                   // Add functionality to pick an image
@@ -58,6 +116,7 @@ class AddObjectDetailsPage extends StatelessWidget {
 
               // Object name field
               TextFormField(
+                controller: _nameController,
                 decoration: InputDecoration(
                   labelText: '오브젝트 이름',
                   border: OutlineInputBorder(),
@@ -73,6 +132,7 @@ class AddObjectDetailsPage extends StatelessWidget {
 
               // Object description field
               TextFormField(
+                controller: _descriptionController,
                 maxLines: 3,
                 decoration: InputDecoration(
                   labelText: '오브젝트 설명',
@@ -83,19 +143,29 @@ class AddObjectDetailsPage extends StatelessWidget {
 
               // Start date picker
               TextFormField(
+                controller: _startDateController,
                 readOnly: true,
                 decoration: InputDecoration(
                   labelText: '시작일',
                   border: OutlineInputBorder(),
                   suffixIcon: Icon(Icons.calendar_today),
                 ),
-                onTap: () {
-                  // Add date picker functionality
+                onTap: () async {
+                  final selectedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                  );
+                  if (selectedDate != null) {
+                    _startDateController.text =
+                        "${selectedDate.year}-${selectedDate.month}-${selectedDate.day}";
+                  }
                 },
               ),
               SizedBox(height: 16),
 
-              // Dropdown field (example with static values)
+              // Dropdown field
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   labelText: '옵션 선택',
@@ -106,50 +176,60 @@ class AddObjectDetailsPage extends StatelessWidget {
                   DropdownMenuItem(value: '옵션2', child: Text('옵션2')),
                 ],
                 onChanged: (value) {
-                  // Handle dropdown value change
+                  setState(() {
+                    _selectedOption = value;
+                  });
                 },
               ),
               SizedBox(height: 16),
 
-               // Dynamic key-value inputs
-              ...List.generate(
-                2, // Replace with dynamic length for multiple fields
-                (index) => Padding(
+              // Dynamic key-value fields
+              ..._dynamicFields.asMap().entries.map((entry) {
+                final index = entry.key;
+                final field = entry.value;
+                return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Row(
                     children: [
                       Expanded(
                         child: TextFormField(
+                          initialValue: field["key"],
                           decoration: InputDecoration(
                             labelText: '키',
                             border: OutlineInputBorder(),
                           ),
+                          onChanged: (value) {
+                            _dynamicFields[index]["key"] = value;
+                          },
                         ),
                       ),
                       SizedBox(width: 8),
                       Expanded(
                         child: TextFormField(
+                          initialValue: field["value"],
                           decoration: InputDecoration(
                             labelText: '값',
                             border: OutlineInputBorder(),
                           ),
+                          onChanged: (value) {
+                            _dynamicFields[index]["value"] = value;
+                          },
                         ),
                       ),
                       IconButton(
                         icon: Icon(Icons.remove_circle_outline),
                         onPressed: () {
-                          // Add remove field functionality
+                          _removeDynamicField(index);
                         },
                       ),
                     ],
                   ),
-                ),
-              ),
+                );
+              }).toList(),
+
               // Add more fields button
               TextButton.icon(
-                onPressed: () {
-                  // Add functionality to append fields
-                },
+                onPressed: _addDynamicField,
                 icon: Icon(Icons.add),
                 label: Text('옵션 추가하기'),
               ),
@@ -157,22 +237,12 @@ class AddObjectDetailsPage extends StatelessWidget {
 
               // Submit button
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Submit the form
-                  }
-                },
+                onPressed: _submitForm,
                 child: Text('완료'),
               ),
             ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.read<ObjectBloc>().add(AddObjectEvent(object));
-        },
-        child: Icon(Icons.save),
       ),
     );
   }

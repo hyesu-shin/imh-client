@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../models/object_model.dart';
 
 // Base abstract class for states
 abstract class ObjectState extends Equatable {
@@ -14,7 +15,7 @@ class ObjectLoading extends ObjectState {}
 
 // Success state with a list of objects
 class ObjectSuccess extends ObjectState {
-  final List<String> objects;
+  final List<ObjectModel> objects;
 
   ObjectSuccess({required this.objects});
 

@@ -1,12 +1,13 @@
 import 'package:equatable/equatable.dart';
+import '../../models/object_model.dart';
 
 abstract class ObjectEvent extends Equatable {
   @override
-  List <Object> get props => [];
+  List<Object> get props => [];
 }
 
 class AddObjectEvent extends ObjectEvent {
-  final String newObject;
+  final ObjectModel newObject;
 
   AddObjectEvent(this.newObject);
 

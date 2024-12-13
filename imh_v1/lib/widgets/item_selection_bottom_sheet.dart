@@ -59,7 +59,7 @@ class ItemSelectionBottomSheet extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddObjectDetailsPage(object: items[0]),
+                    builder: (context) => AddObjectDetailsPage(),
                   ),
                 );
               },
