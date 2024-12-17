@@ -14,3 +14,5 @@ class AddObjectEvent extends ObjectEvent {
   @override
   List<Object> get props => [newObject];
 }
+
+class LoadObjectsEvent extends ObjectEvent {}

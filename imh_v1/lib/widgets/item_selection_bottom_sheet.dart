@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import '../models/object_model.dart';
 import '../pages/add_object_details_page.dart';
 
 class ItemSelectionBottomSheet extends StatelessWidget {
-  final List<String> items = ['아이템 1', '아이템 2', '아이템 3'];
-
   // 높이를 부모 컨테이너에 종속적으로 설정할 수 있도록 heightFactor 추가
   final double heightFactor;
 
@@ -32,19 +32,25 @@ class ItemSelectionBottomSheet extends StatelessWidget {
           Text('아이템을 선택하세요', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           SizedBox(height: 16),
           Expanded(
-            child: ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(items[index]),
-                  onTap: () {
-                    // 아이템 선택 시 동작
-                    Navigator.pop(context); // 바텀시트 닫기
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddItemDetailsPage(item: items[index]),
-                      ),
+            child: ValueListenableBuilder(
+              valueListenable: Hive.box<ObjectModel>('objects_box').listenable(),
+              builder: (context, Box<ObjectModel> box, _) {
+                final items = box.values.toList().map((e) => e.name).toList();
+
+                return ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(items[index]),
+                      onTap: () {
+                        Navigator.pop(context); // 바텀시트 닫기
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddObjectDetailsPage(),
+                          ),
+                        );
+                      },
                     );
                   },
                 );
@@ -86,18 +92,3 @@ class AddItemDetailsPage extends StatelessWidget {
     );
   }
 }
-
-// Object 추가 페이지
-// class AddObjectDetailsPage extends StatelessWidget {
-//   final String object;
-
-//   AddObjectDetailsPage({required this.object});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('$object 세부 정보')),
-//       body: Center(child: Text('$object 정보를 추가하세요.')),
-//     );
-//   }
-// }
