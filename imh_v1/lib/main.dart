@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'responsive_home_screen.dart';
 import 'models/object_model.dart';
+import 'models/record_model.dart';
 
 import 'blocs/index.dart';
 
@@ -13,9 +14,16 @@ void main() async{
     await Hive.initFlutter();
 
     // Register the adapters for each model
-    Hive.registerAdapter(ObjectModelAdapter());  // Register ObjectModel adapter
+    // 중복 등록 확인
+  if (!Hive.isAdapterRegistered(0)) {
+    Hive.registerAdapter(ObjectModelAdapter()); // typeId: 0
+  }
+  if (!Hive.isAdapterRegistered(1)) {
+    Hive.registerAdapter(RecordModelAdapter()); // typeId: 1
+  }
 
-    await Hive.openBox<ObjectModel>('objects_box');  // Or any other boxes
+    await Hive.openBox<ObjectModel>('objects_box');
+    await Hive.openBox<RecordModel>('records_box');  // Or any other boxes
   } catch (e) {
     print('Error initializing Hive: $e');
   }

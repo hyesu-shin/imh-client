@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/object_model.dart';
 import '../pages/add_object_page.dart';
+import '../pages/add_record_page.dart';
 
 class ItemSelectionBottomSheet extends StatelessWidget {
   // 높이를 부모 컨테이너에 종속적으로 설정할 수 있도록 heightFactor 추가
@@ -15,7 +16,7 @@ class ItemSelectionBottomSheet extends StatelessWidget {
       height: MediaQuery.of(context).size.height * heightFactor,
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 109, 73, 73),
+        color: const Color.fromARGB(255, 255, 255, 255),
         borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
         boxShadow: [
           BoxShadow(
@@ -35,19 +36,20 @@ class ItemSelectionBottomSheet extends StatelessWidget {
             child: ValueListenableBuilder(
               valueListenable: Hive.box<ObjectModel>('objects_box').listenable(),
               builder: (context, Box<ObjectModel> box, _) {
-                final items = box.values.toList().map((e) => e.name).toList();
+                final objects = box.values.toList();
 
                 return ListView.builder(
-                  itemCount: items.length,
+                  itemCount: objects.length,
                   itemBuilder: (context, index) {
+                    final object = objects[index];
                     return ListTile(
-                      title: Text(items[index]),
+                      title: Text(object.name),
                       onTap: () {
                         Navigator.pop(context); // 바텀시트 닫기
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AddObjectPage(),
+                            builder: (context) => AddRecordPage(objectId: object.id, objectName: object.name),
                           ),
                         );
                       },
@@ -74,21 +76,6 @@ class ItemSelectionBottomSheet extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-// 페이지 이동용 예시 페이지
-class AddItemDetailsPage extends StatelessWidget {
-  final String item;
-
-  AddItemDetailsPage({required this.item});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('$item 세부 정보')),
-      body: Center(child: Text('$item 정보를 추가하세요.')),
     );
   }
 }
