@@ -15,4 +15,4 @@ class AddObjectEvent extends ObjectEvent {
   List<Object> get props => [newObject];
 }
 
-class LoadObjectsEvent extends ObjectEvent {}
+class LoadObjectEvent extends ObjectEvent {}

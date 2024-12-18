@@ -15,12 +15,12 @@ class ObjectLoading extends ObjectState {}
 
 // Success state with a list of objects
 class ObjectSuccess extends ObjectState {
-  final List<ObjectModel> objects;
+  final List<ObjectModel> object;
 
-  ObjectSuccess({required this.objects});
+  ObjectSuccess({required this.object});
 
   @override
-  List<Object?> get props => [objects];
+  List<Object?> get props => [object];
 }
 
 // Failure state with an error message

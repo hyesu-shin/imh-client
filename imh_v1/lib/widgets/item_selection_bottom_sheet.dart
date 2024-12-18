@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/object_model.dart';
-import '../pages/add_object_details_page.dart';
+import '../pages/add_object_page.dart';
 
 class ItemSelectionBottomSheet extends StatelessWidget {
   // 높이를 부모 컨테이너에 종속적으로 설정할 수 있도록 heightFactor 추가
@@ -15,7 +15,7 @@ class ItemSelectionBottomSheet extends StatelessWidget {
       height: MediaQuery.of(context).size.height * heightFactor,
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color.fromARGB(255, 109, 73, 73),
         borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
         boxShadow: [
           BoxShadow(
@@ -47,7 +47,7 @@ class ItemSelectionBottomSheet extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AddObjectDetailsPage(),
+                            builder: (context) => AddObjectPage(),
                           ),
                         );
                       },
@@ -65,7 +65,7 @@ class ItemSelectionBottomSheet extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddObjectDetailsPage(),
+                    builder: (context) => AddObjectPage(),
                   ),
                 );
               },

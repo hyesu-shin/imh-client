@@ -17,11 +17,12 @@ class ObjectModelAdapter extends TypeAdapter<ObjectModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ObjectModel(
-      name: fields[0] as String,
-      description: fields[1] as String,
-      startDate: fields[2] as String,
-      option: fields[3] as String?,
-      dynamicFields: (fields[4] as List)
+      id: fields[0] as String?,
+      name: fields[1] as String,
+      description: fields[2] as String,
+      startDate: fields[3] as String,
+      endDate: fields[4] as String?,
+      dynamicFields: (fields[5] as List)
           .map((dynamic e) => (e as Map).cast<String, String>())
           .toList(),
     );
@@ -30,16 +31,18 @@ class ObjectModelAdapter extends TypeAdapter<ObjectModel> {
   @override
   void write(BinaryWriter writer, ObjectModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.description)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.startDate)
+      ..write(obj.description)
       ..writeByte(3)
-      ..write(obj.option)
+      ..write(obj.startDate)
       ..writeByte(4)
+      ..write(obj.endDate)
+      ..writeByte(5)
       ..write(obj.dynamicFields);
   }
 
