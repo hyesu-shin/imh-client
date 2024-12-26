@@ -20,8 +20,8 @@ class ObjectModelAdapter extends TypeAdapter<ObjectModel> {
       id: fields[0] as String?,
       name: fields[1] as String,
       description: fields[2] as String,
-      startDate: fields[3] as String,
-      endDate: fields[4] as String?,
+      startDate: fields[3] as DateTime,
+      endDate: fields[4] as DateTime?,
       dynamicFields: (fields[5] as List)
           .map((dynamic e) => (e as Map).cast<String, String>())
           .toList(),

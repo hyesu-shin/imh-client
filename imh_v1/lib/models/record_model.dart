@@ -14,7 +14,7 @@ class RecordModel {
   final String objectId;
 
   @HiveField(2)
-  final String date;
+  final DateTime date;
 
   @HiveField(3)
   final String title;

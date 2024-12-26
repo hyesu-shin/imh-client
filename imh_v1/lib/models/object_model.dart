@@ -17,10 +17,10 @@ class ObjectModel {
   final String description;
 
   @HiveField(3)
-  final String startDate;
+  final DateTime startDate;
 
   @HiveField(4)
-  final String? endDate;
+  final DateTime? endDate;
 
   @HiveField(5)
   final List<Map<String, String>> dynamicFields;

@@ -19,7 +19,7 @@ class RecordModelAdapter extends TypeAdapter<RecordModel> {
     return RecordModel(
       id: fields[0] as String?,
       objectId: fields[1] as String,
-      date: fields[2] as String,
+      date: fields[2] as DateTime,
       title: fields[3] as String,
       description: fields[4] as String?,
       status: fields[5] as String,

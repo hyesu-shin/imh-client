@@ -46,12 +46,30 @@ class _AddObjectPageState extends State<AddObjectPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
+      DateTime startDate;
+      DateTime? endDate;
+
+      try {
+        // Only convert if the text is not empty
+        startDate = DateTime.parse(_startDateController.text);
+      
+        if (_endDateController.text.isNotEmpty) {
+          endDate = DateTime.parse(_endDateController.text);
+        }
+      } catch (e) {
+        // Handle parsing error (invalid date format)
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('날짜 형식이 올바르지 않습니다.')),
+        );
+        return;
+      }
+
       // Build the object data
       final newObject = ObjectModel(
         name: _nameController.text,
         description: _descriptionController.text,
-        startDate: _startDateController.text,
-        endDate: _endDateController.text,
+        startDate: startDate,
+        endDate:  endDate,
         dynamicFields: _dynamicFields,
       );
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/item_selection_bottom_sheet.dart';
 import '../widgets/calendar_widget.dart';
+import '../widgets/record_list_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -14,11 +15,19 @@ class HomeScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+         crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: CalendarWidget(),
+            ),
+            // Removed Expanded widget here
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  // RecordListWidget(),
+                ],
+              ),
             ),
           ],
         )

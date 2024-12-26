@@ -35,9 +35,23 @@ class _AddRecordPageState extends State<AddRecordPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
+      DateTime date;
+
+      try {
+        // Only convert if the text is not empty
+        date = DateTime.parse(_dateController.text);
+
+      } catch (e) {
+        // Handle parsing error (invalid date format)
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('날짜 형식이 올바르지 않습니다.')),
+        );
+        return;
+      }
+
       // Build the record data
       final newRecord = RecordModel(
-        date: _dateController.text,
+        date: date,
         objectId: widget.objectId,
         title: _titleController.text,
         description: _descriptionController.text,
